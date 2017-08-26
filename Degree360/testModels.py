@@ -9,12 +9,11 @@ def CreateDummyRelationPeer():
     aRelation.description = 'A dummy colleague'
     return aRelation
     
-def CreateDummmyFeedbackProvider():
+def CreateDummmyFeedbackProvider(name = 'DummyName', email = 'dummy@myEmail.com'):
     aFeedbackProvider = FeedbackProvider()
-    aFeedbackProvider.name = 'DummyName'
-    aFeedbackProvider.last_name = 'DummylastName'
+    aFeedbackProvider.name = name    
     aFeedbackProvider.relation_type = CreateDummyRelationPeer()
-    aFeedbackProvider.email = 'dummy@myEmail.com'
+    aFeedbackProvider.email = email
     return aFeedbackProvider
         
 class Test(unittest.TestCase):
@@ -22,13 +21,19 @@ class Test(unittest.TestCase):
     def testName(self):
         pass
     
-    def testRelationType__str__(self):
+    def test_RelationType__str__(self):
         aRelation = CreateDummyRelationPeer()        
-        self.assertEqual('DummyPeer: A dummy colleague', aRelation.__str__())
+        self.assertEqual('DummyPeer', aRelation.__str__())
         
-    def testFeedbackProvider(self):
+    def test_FeedbackProvider(self):
         aFeedbackProvider = CreateDummmyFeedbackProvider()
+        aFeedbackProvider.last_name = 'DummylastName'
         self.assertEqual('DummyName DummylastName (dummy@myEmail.com)', aFeedbackProvider.__str__())
+        
+    def test_FeedbackProvider_can_have_empty_LastName(self):
+        aFeedbackProvider = CreateDummmyFeedbackProvider()
+        self.assertEqual('', aFeedbackProvider.last_name)
+        self.assertEqual('DummyName  (dummy@myEmail.com)', aFeedbackProvider.__str__())
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
