@@ -9,7 +9,7 @@ python:
 #  - mysql
 
 env:
-  -DJANGO=1.8 DB=sqlite
+  -DJANGO=1.8.7 DB=sqlite
   
 install:
 #  - pip install -r requirements.txt
