@@ -11,9 +11,10 @@ python:
 env:
   -DJANGO=1.8 DB=sqlite
   
-#install:
+install:
 #  - pip install -r requirements.txt
-
+  - pip install django==$DJANGO --quiet
+  
 #before_script:
 #  - mysql -e 'create database test;' -u root
   
