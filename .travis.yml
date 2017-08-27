@@ -15,7 +15,7 @@ env:
 #  - pip install -r requirements.txt
 
 #before_script:
-  - mysql -e 'create database test;' -u root
+#  - mysql -e 'create database test;' -u root
   
 script:
   - python manage.py test
