@@ -1,0 +1,15 @@
+{% if feedbackProviders %}
+	<p>
+	!!requestFeedaback view.. work in progress!! You're looking at 360 Degree feedback survey {{pk}}.
+	</p>
+	<em>
+	Users selected to provide feedbacks:
+	</em>
+    <ul>
+    {% for feedbackProvider in feedbackProviders %}
+        <p>{{ feedbackProvider.name }}</p>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No user has been selected to provide feedbacks for the 360 Degree Review.</p>
+{% endif %}

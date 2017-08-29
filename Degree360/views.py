@@ -1,4 +1,6 @@
 from django.http import HttpResponse
+from django.shortcuts import render
+
 from Degree360.models import FeedbackProvider
 
 def workInProgress(request):
@@ -6,7 +8,9 @@ def workInProgress(request):
 
 def requestFeedaback(request, pk):
     feedbackProviders = FeedbackProvider.objects.all()
-    pseudoHead = "!!requestFeedaback view.. work in progress!! You're looking at 360 Degree feedback survey %s." % pk
-    names = ', '.join([fp.name for fp in feedbackProviders])
-    output = pseudoHead + names
-    return HttpResponse(output)
+    context = {
+        'pk': pk,
+        'feedbackProviders': feedbackProviders
+        }
+    
+    return render(request, 'Degree360/requestFeedback.html', context)
