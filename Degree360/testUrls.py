@@ -12,7 +12,7 @@ class TestUrls(unittest.TestCase):
         self.assertIsNone(match, 'Match not found for the url')
          
     def test_regex_for_requestFeedaback_url_ok(self):
-        url = 'ed521599-062e-4a19-bb2a-419ebc15e29c/requestFeedaback/'
+        url = 'requestFeedaback/ed521599-062e-4a19-bb2a-419ebc15e29c/'
         pattern = re.compile(urlRegexPatterns['requestFeedaback'])
         match = pattern.search(url)
         
@@ -21,7 +21,7 @@ class TestUrls(unittest.TestCase):
         self.assertEqual('ed521599-062e-4a19-bb2a-419ebc15e29c', match.group('pk'), 'guid in the url not found')
 
     def test_regex_for_requestFeedaback_url_with_erroneus_guid(self):
-        incorrect_url = 'd521599-062e-4a19-bb2a-419ebc15e29c/requestFeedaback/'               
+        incorrect_url = 'requestFeedaback/d521599-062e-4a19-bb2a-419ebc15e29c/'               
         self.assert_match_not_found_in_incorrect_url_for_requestFeedaback(incorrect_url)
 
     def test_regex_for_requestFeedaback_url_without_requestFeedaback(self):
@@ -29,7 +29,7 @@ class TestUrls(unittest.TestCase):
         self.assert_match_not_found_in_incorrect_url_for_requestFeedaback(incorrect_url)
 
     def test_regex_for_requestFeedaback_url_with_misspelled_requestFeedaback(self):
-        incorrect_url = 'd521599-062e-4a19-bb2a-419ebc15e29c/requestFedaback'               
+        incorrect_url = 'requestFedaback/d521599-062e-4a19-bb2a-419ebc15e29c/'               
         self.assert_match_not_found_in_incorrect_url_for_requestFeedaback(incorrect_url)
         
 if __name__ == "__main__":
