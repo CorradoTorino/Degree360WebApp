@@ -26,6 +26,8 @@ class FeedbackProvider(models.Model):
     relation_type = models.ForeignKey(RelationType, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     
+    unique_together = (("survey", "email"),)
+    
     def __str__(self):
         return '{} {} ({})'.format(self.name, self.last_name, self.email) 
 
