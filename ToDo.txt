@@ -1,2 +1,4 @@
 - More test on regex for feedback providers urls
 - remove warning "Select a valid choice. That choice is not one of the available choices." from view http://127.0.0.1:8000/Degree360/feedbackProvider/d2d72e89-cc0c-4738-9447-7b4f93b43b16/boromir@lordoftherings.com/
+- Rendering form error messages to avoid error 505 in case of UNIQUE constraint failed: Degree360_feedbackprovider.survey_id, Degree360_feedbackprovider.email
+	See the documentation in https://docs.djangoproject.com/en/1.11/topics/forms/ in the subsection "Rendering form error messages"
