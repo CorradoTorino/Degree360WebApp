@@ -1,9 +1,10 @@
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.forms import ModelForm
 from django.views.generic.edit import FormView
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages 
+
 from Degree360.forms import FeedbackProviderForm
 from django import forms
 
@@ -32,13 +33,16 @@ def feedbackProvider(request, pk, email):
         if form.is_valid():
             feedbackProvider = form.save(commit=False)
             feedbackProvider.survey = Survey.objects.get(id=pk)
-            feedbackProvider.email = email
             feedbackProvider.save()
             return HttpResponse("feedbackProvider Work in progress: saved the feedbackProvider")
+        else:
+            messages.error(request, "Error")
+        
     else:
         initial = {
             'name': feedbackProvider.name,
-            'last_name': feedbackProvider.last_name,            
+            'last_name': feedbackProvider.last_name,
+            'email': feedbackProvider.email,
             'relation_type': feedbackProvider.relation_type
             }
         form = FeedbackProviderForm(initial)
