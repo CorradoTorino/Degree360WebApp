@@ -1,0 +1,21 @@
+<html>
+	<head>
+        <title>Surveys</title>
+    </head>
+	
+	<body>
+		<div>
+			<h1>Available surveys</h1>
+		</div>
+		
+		{% if surveys_list %}
+			<ul>
+			{% for survey in surveys_list %}
+				<li><a href="{% url 'Degree360:requestFeedback' survey.id %}">{{ survey }}</a></li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<p>No surveys available.</p>
+		{% endif %}
+	</body>
+</html>

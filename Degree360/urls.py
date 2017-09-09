@@ -5,14 +5,14 @@ from . import views
 app_name = 'Degree360'
 
 urlRegexPatterns = {
-    'workInProgress' :  r'^$',
+    'SurveyIndex' :  r'^$',
     'requestFeedback' : r'^requestFeedback/(?P<pk>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/$',    
     'feedbackProvider' : r'^feedbackProvider/(?P<pk>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/(?P<email>[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)/$',
 }
 
 urlpatterns = [
     # ex: 
-    url(urlRegexPatterns['workInProgress'], views.workInProgress, name='workInProgress'),
+    url(urlRegexPatterns['SurveyIndex'], views.SurveyIndexView.as_view(), name='SurveyIndex'),
     
     # ex: requestFeedaback/ed521599-062e-4a19-bb2a-419ebc15e29c/
     url(urlRegexPatterns['requestFeedback'], views.requestFeedback, name='requestFeedback'),

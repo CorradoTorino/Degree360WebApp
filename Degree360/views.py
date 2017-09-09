@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django.views.generic.edit import FormView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages 
+from django.views.generic import ListView
 
 from Degree360.forms import FeedbackProviderForm
 from django import forms
@@ -53,6 +54,12 @@ def feedbackProvider(request, pk, email):
          }
     
     return render(request, template, context)
-
+    
+class SurveyIndexView(ListView):
+    template_name = 'Degree360/SurveyIndex.html'
+    context_object_name = 'surveys_list'
+    
+    def get_queryset(self):
+        return Survey.objects.all()
 
 
