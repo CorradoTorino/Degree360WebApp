@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.views.generic import ListView
 
 from Degree360.forms import FeedbackProviderForm
-from django import forms
 
 from Degree360.models import FeedbackProvider, Survey
 
@@ -27,9 +26,7 @@ def feedbackProvider(request, pk, email):
     feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)  
     template = 'Degree360/FeedbackProvider.html'
     
-    if request.method == "POST":
-        form = FeedbackProviderForm()
-        
+    if request.method == "POST":      
         form = FeedbackProviderForm(request.POST, instance=feedbackProvider)
         if form.is_valid():
             feedbackProvider = form.save(commit=False)
@@ -38,7 +35,6 @@ def feedbackProvider(request, pk, email):
             return HttpResponse("feedbackProvider Work in progress: saved the feedbackProvider")
         else:
             messages.error(request, "Error")
-        
     else:
         initial = {
             'name': feedbackProvider.name,
@@ -54,7 +50,7 @@ def feedbackProvider(request, pk, email):
          }
     
     return render(request, template, context)
-    
+
 class SurveyIndexView(ListView):
     template_name = 'Degree360/SurveyIndex.html'
     context_object_name = 'surveys_list'

@@ -17,7 +17,6 @@ class Survey(models.Model):
     def __str__(self):
         return '{} {}'.format(self.employee_name, self.employee_last_name)
     
-    
 class RelationType(models.Model):
     relation_type = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
@@ -51,4 +50,48 @@ class FeedbackProvider(models.Model):
     class Meta:
         unique_together = (("survey", "email"),)
 
+class QuestionSection(models.Model):
+    description = models.CharField(max_length=100)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.description
+    
+class Question(models.Model):
+    text = models.CharField(max_length=200)
+    section = models.ForeignKey(QuestionSection, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return '{}: {}'.format(self.section, self.text)
+    
+class MultiChoiceAnswer(models.Model):
+    feedback_provider = models.ForeignKey(FeedbackProvider, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    
+    NEVER = 0
+    RARELY = 1
+    SOMETIMES = 2
+    OFTEN = 3
+    ALWAYS = 4
+
+    ANSWER_CHOICES = (
+        (NEVER, 'Never'),
+        (RARELY, 'Rarely'),
+        (SOMETIMES, 'Sometimes'),
+        (OFTEN, 'Often'),
+        (ALWAYS, 'Always'),
+    )
+    
+    answer = models.IntegerField( choices=ANSWER_CHOICES, default=NEVER)
+    
+    def __str__(self):
+        return '{} {}'.format(self.question, self.ANSWER_CHOICES[self.answer][1])
+    
+class OpenAnswer(models.Model):
+    feedback_provider = models.ForeignKey(FeedbackProvider, on_delete=models.CASCADE)    
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=1000, blank=True, default='')
+    
+    def __str__(self):
+        return '{}...'.format(self.answer[0:50])
+    

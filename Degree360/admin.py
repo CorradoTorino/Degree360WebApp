@@ -1,7 +1,10 @@
 from django.contrib import admin
-from Degree360.models import RelationType, FeedbackProvider, Survey
+from Degree360 import models
 
-# Register your models here.
-admin.site.register(Survey)
-admin.site.register(RelationType)
-admin.site.register(FeedbackProvider)
+admin.site.register(models.Survey)
+admin.site.register(models.RelationType)
+admin.site.register(models.FeedbackProvider)
+admin.site.register(models.QuestionSection)
+admin.site.register(models.Question)
+admin.site.register(models.MultiChoiceAnswer)
+admin.site.register(models.OpenAnswer)
