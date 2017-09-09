@@ -6,8 +6,8 @@
 	Users selected to provide feedbacks:
 	</em>
     <ul>
-    {% for feedbackProvider in feedbackProviders %}
-        <p>{{ feedbackProvider.name }}</p>
+    {% for feedbackProvider in feedbackProviders %}	
+        <li><a href="{% url 'Degree360:feedbackProvider' feedbackProvider.survey.id feedbackProvider.email %}">{{ feedbackProvider.name }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
