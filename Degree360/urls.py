@@ -15,7 +15,7 @@ urlpatterns = [
     url(urlRegexPatterns['workInProgress'], views.workInProgress, name='workInProgress'),
     
     # ex: requestFeedaback/ed521599-062e-4a19-bb2a-419ebc15e29c/
-    url(urlRegexPatterns['requestFeedback'], views.requestFeedback, name='requestFeedaback'),
+    url(urlRegexPatterns['requestFeedback'], views.requestFeedback, name='requestFeedback'),
 
     # ex: feedbackProvider/ed521599-062e-4a19-bb2a-419ebc15e29c/dummyGuy@email.com
     url(urlRegexPatterns['feedbackProvider'], views.feedbackProvider, name='feedbackProvider', ),

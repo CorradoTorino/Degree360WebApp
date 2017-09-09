@@ -46,9 +46,13 @@ def feedbackProvider(request, pk, email):
             'relation_type': feedbackProvider.relation_type
             }
         form = FeedbackProviderForm(initial)
-        
+
+    context = {
+        'form':form,
+         'pk':pk
+         }
     
-    return render(request, template, {'form':form})
+    return render(request, template, context)
 
 
 
