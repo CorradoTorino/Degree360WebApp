@@ -53,17 +53,29 @@ class FeedbackProvider(models.Model):
 class QuestionSection(models.Model):
     description = models.CharField(max_length=100)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
-    
+    order = models.IntegerField(default=0)
+        
     def __str__(self):
         return self.description
     
 class Question(models.Model):
     text = models.CharField(max_length=200)
     section = models.ForeignKey(QuestionSection, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
+
+    MULTICHOICE = 0
+    OPEN = 1
+
+    ANSWER_TYPE = (
+        (MULTICHOICE, 'MultiChoice'),
+        (OPEN, 'Open'),
+    )
+    
+    answer = models.IntegerField( choices=ANSWER_TYPE, default=MULTICHOICE)
 
     def __str__(self):
         return '{}: {}'.format(self.section, self.text)
-    
+
 class MultiChoiceAnswer(models.Model):
     feedback_provider = models.ForeignKey(FeedbackProvider, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -94,4 +106,4 @@ class OpenAnswer(models.Model):
     
     def __str__(self):
         return '{}...'.format(self.answer[0:50])
-    
+
