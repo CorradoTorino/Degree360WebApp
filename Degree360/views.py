@@ -1,8 +1,5 @@
-from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.forms import ModelForm
-from django.views.generic.edit import FormView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 from django.contrib import messages 
 from django.views.generic import ListView
 
