@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages 
 from django.views.generic import ListView
+
+from django.core.urlresolvers import reverse
 
 from Degree360.forms import FeedbackProviderForm
 
@@ -29,7 +31,8 @@ def feedbackProvider(request, pk, email):
             feedbackProvider = form.save(commit=False)
             feedbackProvider.survey = Survey.objects.get(id=pk)
             feedbackProvider.save()
-            return HttpResponse("feedbackProvider Work in progress: saved the feedbackProvider")
+            return HttpResponseRedirect(reverse('Degree360:requestFeedback', args=(pk,)))
+            #return HttpResponse("feedbackProvider Work in progress: saved the feedbackProvider")
         else:
             messages.error(request, "Error")
     else:
