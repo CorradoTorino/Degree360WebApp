@@ -21,19 +21,15 @@ def requestFeedback(request, pk):
     
     return render(request, 'Degree360/requestFeedback.html', context)
 
-def addFeedbackProvider(request, pk):
-    template = 'Degree360/FeedbackProvider.html'
+def __processFeedbackProviderFormAndRedirect(form, pk):
+    if form.is_valid():
+        feedbackProvider = form.save(commit=False)
+        feedbackProvider.survey = Survey.objects.get(id=pk)
+        feedbackProvider.save()
+        return HttpResponseRedirect(reverse('Degree360:requestFeedback', args=(pk,)))
     
-    if request.method == "POST":      
-        form = FeedbackProviderForm(request.POST)
-        if form.is_valid():
-            feedbackProvider = form.save(commit=False)
-            feedbackProvider.survey = Survey.objects.get(id=pk)
-            feedbackProvider.save()
-            return HttpResponseRedirect(reverse('Degree360:requestFeedback', args=(pk,)))
-    else:
-        form = FeedbackProviderForm()
-
+def __renderFeedbackProviderTemplate(request, form, pk):
+    template = 'Degree360/FeedbackProvider.html'
     context = {
         'form':form,
          'pk':pk
@@ -41,19 +37,21 @@ def addFeedbackProvider(request, pk):
     
     return render(request, template, context)
 
+def addFeedbackProvider(request, pk):
+    if request.method == "POST":
+        form = FeedbackProviderForm(request.POST)
+        __processFeedbackProviderFormAndRedirect(form, pk)
+    else:
+        form = FeedbackProviderForm()
+
+    return __renderFeedbackProviderTemplate(request, form, pk)
+
 def editFeedbackProvider(request, pk, email):   
     feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)  
-    template = 'Degree360/FeedbackProvider.html'
-    
+        
     if request.method == "POST":      
         form = FeedbackProviderForm(request.POST, instance=feedbackProvider)
-        if form.is_valid():
-            feedbackProvider = form.save(commit=False)
-            feedbackProvider.survey = Survey.objects.get(id=pk)
-            feedbackProvider.save()
-            return HttpResponseRedirect(reverse('Degree360:requestFeedback', args=(pk,)))
-        else:
-            messages.error(request, "Error")
+        __processFeedbackProviderFormAndRedirect(form, pk)
     else:
         initial = {
             'name': feedbackProvider.name,
@@ -63,12 +61,7 @@ def editFeedbackProvider(request, pk, email):
             }
         form = FeedbackProviderForm(initial)
 
-    context = {
-        'form':form,
-         'pk':pk
-         }
-    
-    return render(request, template, context)
+    return __renderFeedbackProviderTemplate(request, form, pk)
 
 class SurveyIndexView(ListView):
     template_name = 'Degree360/SurveyIndex.html'
