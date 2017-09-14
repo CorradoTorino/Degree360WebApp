@@ -7,9 +7,12 @@
 	</em>
     <ul>
     {% for feedbackProvider in feedbackProviders %}	
-        <li><a href="{% url 'Degree360:feedbackProvider' feedbackProvider.survey.id feedbackProvider.email %}">{{ feedbackProvider.name }}</a></li>
+        <li><a href="{% url 'Degree360:editFeedbackProvider' feedbackProvider.survey.id feedbackProvider.email %}">{{ feedbackProvider.name }}</a></li>
     {% endfor %}
     </ul>
+	<ul>
+	<li><a href="{% url 'Degree360:addFeedbackProvider' pk %}">Add new feedback provider</a></li>
+	</ul>
 {% else %}
     <p>No user has been selected to provide feedbacks for the 360 Degree Review.</p>
 {% endif %}

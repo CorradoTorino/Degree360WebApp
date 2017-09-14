@@ -21,7 +21,27 @@ def requestFeedback(request, pk):
     
     return render(request, 'Degree360/requestFeedback.html', context)
 
-def feedbackProvider(request, pk, email):   
+def addFeedbackProvider(request, pk):
+    template = 'Degree360/FeedbackProvider.html'
+    
+    if request.method == "POST":      
+        form = FeedbackProviderForm(request.POST)
+        if form.is_valid():
+            feedbackProvider = form.save(commit=False)
+            feedbackProvider.survey = Survey.objects.get(id=pk)
+            feedbackProvider.save()
+            return HttpResponseRedirect(reverse('Degree360:requestFeedback', args=(pk,)))
+    else:
+        form = FeedbackProviderForm()
+
+    context = {
+        'form':form,
+         'pk':pk
+         }
+    
+    return render(request, template, context)
+
+def editFeedbackProvider(request, pk, email):   
     feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)  
     template = 'Degree360/FeedbackProvider.html'
     
@@ -32,7 +52,6 @@ def feedbackProvider(request, pk, email):
             feedbackProvider.survey = Survey.objects.get(id=pk)
             feedbackProvider.save()
             return HttpResponseRedirect(reverse('Degree360:requestFeedback', args=(pk,)))
-            #return HttpResponse("feedbackProvider Work in progress: saved the feedbackProvider")
         else:
             messages.error(request, "Error")
     else:
