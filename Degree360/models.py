@@ -57,6 +57,9 @@ class QuestionSection(models.Model):
         
     def __str__(self):
         return self.description
+
+    class Meta:
+        unique_together = (("survey", "description"),)
     
 class Question(models.Model):
     text = models.CharField(max_length=200)
