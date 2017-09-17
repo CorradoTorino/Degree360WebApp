@@ -99,6 +99,12 @@ class MultiChoiceAnswer(models.Model):
     
     answer = models.IntegerField( choices=ANSWER_CHOICES, default=NEVER)
     
+    @classmethod
+    def create(cls, feedback_provider, question, answer=NEVER):
+        instance = cls(feedback_provider=feedback_provider, question=question, answer=answer)
+        instance.save()
+        return instance
+    
     def __str__(self):
         return '{} {}'.format(self.question, self.ANSWER_CHOICES[self.answer][1])
     

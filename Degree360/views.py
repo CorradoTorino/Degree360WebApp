@@ -22,13 +22,6 @@ def requestFeedback(request, pk):
     
     return render(request, 'Degree360/requestFeedback.html', context)
 
-def createMultiChoiceAnswer(feedback_provider, question):
-    answer = MultiChoiceAnswer()
-    answer.feedback_provider = feedback_provider
-    answer.question = question
-
-    return answer
-
 def questionSectionView(request, pk, email, section):
     
     questionSection = get_object_or_404(QuestionSection, survey=pk, description=section)
@@ -46,7 +39,7 @@ def questionSectionView(request, pk, email, section):
                 correlatedAnswer = multiChoiceAnswer
         
         if correlatedAnswer == NULL:
-            correlatedAnswer = createMultiChoiceAnswer(feedbackProvider, question)
+            correlatedAnswer = MultiChoiceAnswer.create(feedbackProvider, question)
             
         questionsAndAnswers.append((question.text, correlatedAnswer.answer.__str__()))
         
