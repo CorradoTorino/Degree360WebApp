@@ -34,7 +34,7 @@ class TestUrls(unittest.TestCase):
     
     def test_regex_for_FeedbackProvider_url_ok(self):
         url = 'feedbackProvider/ed521599-062e-4a19-bb2a-419ebc15e29c/dummyGuy@email.com/'
-        pattern = re.compile(urlRegexPatterns['feedbackProvider'])
+        pattern = re.compile(urlRegexPatterns['EditFeedbackProvider'])
         match = pattern.search(url)
         
         self.assertIsNotNone(match, 'Match not found for the url')
