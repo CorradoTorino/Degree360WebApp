@@ -108,6 +108,9 @@ class MultiChoiceAnswer(models.Model):
     def __str__(self):
         return '{} {}'.format(self.question, self.ANSWER_CHOICES[self.answer][1])
     
+    class Meta:
+        unique_together = (("feedback_provider", "question"),)
+    
 class OpenAnswer(models.Model):
     feedback_provider = models.ForeignKey(FeedbackProvider, on_delete=models.CASCADE)    
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
