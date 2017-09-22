@@ -2,10 +2,14 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages 
 from django.views.generic import ListView
+from django.forms import BaseModelFormSet
+from django.forms import ModelForm
+from django.forms import modelformset_factory, modelform_factory
+from django import forms
 
 from django.core.urlresolvers import reverse
 
-from Degree360.forms import FeedbackProviderForm
+from Degree360.forms import FeedbackProviderForm, MultiChoiceAnswerForm, MultiChoiceAnswerFormSet
 
 from Degree360.models import FeedbackProvider, Survey, QuestionSection, Question, MultiChoiceAnswer, OpenAnswer
 from _overlapped import NULL
@@ -22,34 +26,58 @@ def requestFeedback(request, pk):
     
     return render(request, 'Degree360/requestFeedback.html', context)
 
+def _processQuestionSectionPost():
+    return NULL
+
 def questionSectionView(request, pk, email, section):
-    
-    questionSection = get_object_or_404(QuestionSection, survey=pk, description=section)
-    feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
-    
-    questions = Question.objects.filter(section=questionSection).order_by('order')
-    multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider)
-    
-    questionsAndAnswers = []
-    
-    for question in questions:
-        correlatedAnswer = NULL
-        for multiChoiceAnswer in multiChoiceAnswers:
-            if multiChoiceAnswer.question == question:
-                correlatedAnswer = multiChoiceAnswer
+    if request.method == "POST":
+        return HttpResponse("questionSectionView after post. Work in progress.")
         
-        if correlatedAnswer == NULL:
-            correlatedAnswer = MultiChoiceAnswer.create(feedbackProvider, question)
+    else:        
+        questionSection = get_object_or_404(QuestionSection, survey=pk, description=section)
+        feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
+        
+        questions = Question.objects.filter(section=questionSection).order_by('order')
+        multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
+        
+        
+        questionsAndAnswers = []
+        
+        for question in questions:
+            correlatedAnswer = NULL
+            for multiChoiceAnswer in multiChoiceAnswers:
+                if multiChoiceAnswer.question == question:
+                    correlatedAnswer = multiChoiceAnswer
             
-        questionsAndAnswers.append((question.text, correlatedAnswer.answer.__str__()))
+            if correlatedAnswer == NULL:
+                correlatedAnswer = MultiChoiceAnswer.create(feedbackProvider, question)
+                
+            questionsAndAnswers.append(
+                (question.text, correlatedAnswer.answer.__str__(), MultiChoiceAnswerForm(instance=correlatedAnswer))
+                )
+            
+            #form = modelformset_factory(MultiChoiceAnswer,fields=('answer',),formset=MultiChoiceAnswerFormSet)
+        form = modelformset_factory(MultiChoiceAnswer, fields=('answer',),extra=0)
+        formSet = form(queryset = multiChoiceAnswers)
+            
+        context = {
+            'pk': pk,
+            'section': section,
+            'questionsAndAnswers': questionsAndAnswers,
+            'formSet': formSet,
+            }        
         
-    context = {
-        'pk': pk,
-        'section': section,
-        'questionsAndAnswers': questionsAndAnswers
-        }
-    
-    return render(request, 'Degree360/questionSection.html', context)
+        '''
+        
+        initial = {
+            'answer': feedbackProvider.name,
+            'last_name': feedbackProvider.last_name,
+            'email': feedbackProvider.email,
+            'relation_type': feedbackProvider.relation_type
+            }
+            '''
+               
+        return render(request, 'Degree360/questionSection.html', context)
     
 def _processFeedbackProviderFormAndRedirect(form, pk):
     if form.is_valid():

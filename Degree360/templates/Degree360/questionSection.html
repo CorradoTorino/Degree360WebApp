@@ -1,12 +1,43 @@
 <p>
 !!questionSection view.. work in progress!! You're looking at 360 Degree feedback survey {{pk}}.
 </p>
+
 <em>
 {{section}}
 </em>
+
 <ul>
 {% for questionAndAnswer in questionsAndAnswers %}
 	{{ questionAndAnswer.0 }}
 	{{ questionAndAnswer.1 }}
+	
+	<form method="POST" class="post-form">{% csrf_token %}
+	{{ questionAndAnswer.2.as_p }}
+	<button type="submit" class="save btn btn-default">Save</button>
+	</form>
+	
 {% endfor %}
+
 </ul>
+
+<p>
+spaaaaaaaaaaaaaaaaace
+</p>
+
+<form method="POST" class="post-form">{% csrf_token %}
+	{{ formSet.as_p }}
+	<button type="submit" class="save btn btn-default">Save</button>
+</form>
+
+<form method="post" action="">
+    {{ formSet.management_form }}
+    <table>
+        {% for form in formSet %}
+        <tr>
+        	<td>{{ form.instance.question }}</td>
+        	<td>{{ form }}<td>
+        	
+        </tr>        
+        {% endfor %}
+    </table>
+</form>
