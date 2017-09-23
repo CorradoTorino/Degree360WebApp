@@ -9,8 +9,6 @@ from django import forms
 
 from django.core.urlresolvers import reverse
 
-from Degree360.forms import FeedbackProviderForm, MultiChoiceAnswerForm, MultiChoiceAnswerFormSet
-
 from Degree360.models import FeedbackProvider, Survey, QuestionSection, Question, MultiChoiceAnswer, OpenAnswer
 from _overlapped import NULL
 
