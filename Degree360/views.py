@@ -38,7 +38,7 @@ def questionSectionView(request, pk, email, section):
         
         multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
                   
-        form = modelformset_factory(MultiChoiceAnswer, fields=('answer',),extra=0)
+        form = modelformset_factory(MultiChoiceAnswer, form=MultiChoiceAnswerForm, extra=0)
         formSet = form(queryset = multiChoiceAnswers, )
             
         context = {

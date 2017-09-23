@@ -15,13 +15,6 @@ class MultiChoiceAnswerForm(ModelForm):
     class Meta:
         model = MultiChoiceAnswer
         fields = ['answer']
-        
-class MultiChoiceAnswerFormSet(BaseModelFormSet):
-    
-    def __init__(self, *args, **kwargs):
-        super(MultiChoiceAnswerFormSet, self).__init__(*args, **kwargs)
-        #self.queryset = MultiChoiceAnswer.objects.all()
-    
-    class Meta:
-        model = MultiChoiceAnswer
-        fields = ['answer']
+        labels = {
+            'answer': '',
+        }

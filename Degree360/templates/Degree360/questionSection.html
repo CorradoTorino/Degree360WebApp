@@ -7,11 +7,7 @@
         <tr>
         	<td><b>{{ form.instance.question.text }}</b></td>
         	<td>
-	        	{{ form.non_field_errors }}
-				<div class="fieldWrapper">
-				    {{ form.answer.errors }}
-				    {{ form.answer }}
-				</div>
+	        	{{ form.as_p }}
 			<td>
         </tr>
         <tr></tr>    
