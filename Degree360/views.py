@@ -34,49 +34,19 @@ def questionSectionView(request, pk, email, section):
         return HttpResponse("questionSectionView after post. Work in progress.")
         
     else:        
-        questionSection = get_object_or_404(QuestionSection, survey=pk, description=section)
         feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
         
-        questions = Question.objects.filter(section=questionSection).order_by('order')
         multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
-        
-        
-        questionsAndAnswers = []
-        
-        for question in questions:
-            correlatedAnswer = NULL
-            for multiChoiceAnswer in multiChoiceAnswers:
-                if multiChoiceAnswer.question == question:
-                    correlatedAnswer = multiChoiceAnswer
-            
-            if correlatedAnswer == NULL:
-                correlatedAnswer = MultiChoiceAnswer.create(feedbackProvider, question)
-                
-            questionsAndAnswers.append(
-                (question.text, correlatedAnswer.answer.__str__(), MultiChoiceAnswerForm(instance=correlatedAnswer))
-                )
-            
-            #form = modelformset_factory(MultiChoiceAnswer,fields=('answer',),formset=MultiChoiceAnswerFormSet)
+                  
         form = modelformset_factory(MultiChoiceAnswer, fields=('answer',),extra=0)
         formSet = form(queryset = multiChoiceAnswers, )
             
         context = {
             'pk': pk,
             'section': section,
-            'questionsAndAnswers': questionsAndAnswers,
             'formSet': formSet,
             }        
-        
-        '''
-        
-        initial = {
-            'answer': feedbackProvider.name,
-            'last_name': feedbackProvider.last_name,
-            'email': feedbackProvider.email,
-            'relation_type': feedbackProvider.relation_type
-            }
-            '''
-               
+                       
         return render(request, 'Degree360/questionSection.html', context)
     
 def _processFeedbackProviderFormAndRedirect(form, pk):
