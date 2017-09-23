@@ -1,7 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 import uuid
-    
+
 class Survey(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee_name = models.CharField(max_length=100, blank=True, default='')
@@ -103,19 +105,47 @@ class MultiChoiceAnswer(models.Model):
     def create(cls, feedback_provider, question, answer=NEVER):
         instance = cls(feedback_provider=feedback_provider, question=question, answer=answer)
         instance.save()
-        return instance
+        return instance             
     
     def __str__(self):
         return '{} {}'.format(self.question, self.ANSWER_CHOICES[self.answer][1])
     
     class Meta:
         unique_together = (("feedback_provider", "question"),)
-    
+
 class OpenAnswer(models.Model):
     feedback_provider = models.ForeignKey(FeedbackProvider, on_delete=models.CASCADE)    
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.CharField(max_length=1000, blank=True, default='')
+            
+    @classmethod
+    def create(cls, feedback_provider, question, answer=''):
+        instance = cls(feedback_provider=feedback_provider, question=question, answer=answer)
+        instance.save()
+        return instance     
     
     def __str__(self):
         return '{}...'.format(self.answer[0:50])
 
+#Signals and Methods to ensure consistency in the models
+def createAnswer(feedbackProvider, question):
+    
+    answerClass = MultiChoiceAnswer 
+        
+    if(question.answer == Question.OPEN):
+        answerClass = OpenAnswer
+    
+    if(answerClass.objects.filter(feedback_provider = feedbackProvider, question = question).count() == 0):
+        answerClass.create(feedbackProvider, question)   
+    
+@receiver(post_save, sender=Question, dispatch_uid="createAnswersWhenNewQuestionIsSaved")
+def createAnswersWhenNewQuestionIsSaved(sender, instance, **kwargs):
+
+    for feedbackProvider in FeedbackProvider.objects.filter(survey = instance.section.survey):
+        createAnswer(feedbackProvider, question = instance)
+
+@receiver(post_save, sender=FeedbackProvider, dispatch_uid="createAnswersWhenNewFeedbackProviderIsSaved")
+def createAnswersWhenNewFeedbackProviderIsSaved(sender, instance, **kwargs):   
+
+    for question in Question.objects.filter(section__survey = instance.survey):
+        createAnswer(feedbackProvider = instance, question = question)

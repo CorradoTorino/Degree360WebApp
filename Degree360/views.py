@@ -58,7 +58,7 @@ def questionSectionView(request, pk, email, section):
             
             #form = modelformset_factory(MultiChoiceAnswer,fields=('answer',),formset=MultiChoiceAnswerFormSet)
         form = modelformset_factory(MultiChoiceAnswer, fields=('answer',),extra=0)
-        formSet = form(queryset = multiChoiceAnswers)
+        formSet = form(queryset = multiChoiceAnswers, )
             
         context = {
             'pk': pk,
