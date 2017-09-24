@@ -1,9 +1,10 @@
 import unittest
 import re
+from django.test import TestCase
 
 from Degree360.urls import urlRegexPatterns
 
-class TestUrls(unittest.TestCase):
+class TestUrls(TestCase):
 
     def assert_match_not_found_in_incorrect_url_for_requestFeedback(self, incorrect_url):
         pattern = re.compile(urlRegexPatterns['requestFeedback'])
