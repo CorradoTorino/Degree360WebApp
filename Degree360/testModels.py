@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.db import IntegrityError
 
 from Degree360.models import FeedbackProvider, Survey, RelationType
-from Degree360.urls import urlRegexPatterns
+from Degree360 import urls
 
 def CreateDummmyFeedbackProvider(name = 'DummyName', email = 'dummy@myEmail.com'):  
     aSurvey = Survey.create('dummyEmployName', 'dummyEmployLastName', 'dummyEmploy@myEmail.com')
@@ -50,14 +50,14 @@ class Test(TestCase):
 class TestUrls(TestCase):
 
     def assert_match_not_found_in_incorrect_url_for_requestFeedback(self, incorrect_url):
-        pattern = re.compile(urlRegexPatterns['requestFeedback'])
+        pattern = re.compile(urls.urlRegexPatterns['requestFeedback'])
         match = pattern.search(incorrect_url)
         
         self.assertIsNone(match, 'Match not found for the url')
          
     def test_regex_for_requestFeedback_url_ok(self):
         url = 'requestFeedback/ed521599-062e-4a19-bb2a-419ebc15e29c/'
-        pattern = re.compile(urlRegexPatterns['requestFeedback'])
+        pattern = re.compile(urls.urlRegexPatterns['requestFeedback'])
         match = pattern.search(url)
         
         self.assertIsNotNone(match, 'Match not found for the url')
@@ -78,7 +78,7 @@ class TestUrls(TestCase):
     
     def test_regex_for_FeedbackProvider_url_ok(self):
         url = 'feedbackProvider/ed521599-062e-4a19-bb2a-419ebc15e29c/dummyGuy@email.com/'
-        pattern = re.compile(urlRegexPatterns['EditFeedbackProvider'])
+        pattern = re.compile(urls.urlRegexPatterns['EditFeedbackProvider'])
         match = pattern.search(url)
         
         self.assertIsNotNone(match, 'Match not found for the url')
