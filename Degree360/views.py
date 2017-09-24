@@ -10,7 +10,6 @@ from django import forms
 from django.core.urlresolvers import reverse
 
 from Degree360.models import FeedbackProvider, Survey, QuestionSection, Question, MultiChoiceAnswer, OpenAnswer
-from _overlapped import NULL
 
 def workInProgress(request):
     return HttpResponse("Generic view for Degree360. Work in progress.")
@@ -23,9 +22,6 @@ def requestFeedback(request, pk):
         }
     
     return render(request, 'Degree360/requestFeedback.html', context)
-
-def _processQuestionSectionPost():
-    return NULL
 
 def questionSectionView(request, pk, email, section):
     if request.method == "POST":
