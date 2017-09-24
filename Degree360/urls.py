@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from Degree360 import views
 
 app_name = 'Degree360'
 
