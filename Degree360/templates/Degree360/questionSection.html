@@ -1,6 +1,6 @@
 <em><b>{{section}} section</b></em>
 
-<form method="post" action="">
+<form method="post" class="post-form">{% csrf_token %}
     {{ formSet.management_form }}
     <table>
         {% for form in formSet %}
@@ -13,7 +13,8 @@
         <tr></tr>    
         {% endfor %}
     </table>
+	<button type="submit" class="save btn btn-default">Next</button>
 </form>
 
 
-<button type="submit" class="save btn btn-default">Next</button>
+

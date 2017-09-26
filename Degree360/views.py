@@ -26,17 +26,31 @@ def requestFeedback(request, pk):
     return render(request, 'Degree360/requestFeedback.html', context)
 
 def questionSectionView(request, pk, email, section):
+
+    feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
+    
+    multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
+              
+    form = modelformset_factory(MultiChoiceAnswer, form=MultiChoiceAnswerForm, extra=0)
+    
+    
+    formSet = form(request.POST or None, queryset=multiChoiceAnswers, )
+    
     if request.method == "POST":
+        if formSet.is_valid():
+            for form in formSet:
+                if form.is_valid():
+                    form.save()
+                    
+                    sections = QuestionSection.objects.filter(survey = pk).order_by('order')
+                    
+                    #redirect to the next question
+                    
         return HttpResponse("questionSectionView after post. Work in progress.")
         
     else:        
-        feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
-        
-        multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
-                  
-        form = modelformset_factory(MultiChoiceAnswer, form=MultiChoiceAnswerForm, extra=0)
-        formSet = form(queryset = multiChoiceAnswers, )
-            
+
+        #formSet = form(queryset = multiChoiceAnswers, )
         context = {
             'pk': pk,
             'section': section,

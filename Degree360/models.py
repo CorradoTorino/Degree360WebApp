@@ -61,7 +61,10 @@ class QuestionSection(models.Model):
         return self.description
 
     class Meta:
-        unique_together = (("survey", "description"),)
+        unique_together = (
+            ("survey", "description"),
+            ("survey", "order")
+            )
     
 class Question(models.Model):
     text = models.CharField(max_length=200)
@@ -80,6 +83,12 @@ class Question(models.Model):
 
     def __str__(self):
         return '{}: {}'.format(self.section, self.text)
+    
+    class Meta:
+        unique_together = (
+            ("section", "order"),
+            ("section", "text")
+            )
 
 class MultiChoiceAnswer(models.Model):
     feedback_provider = models.ForeignKey(FeedbackProvider, on_delete=models.CASCADE)
