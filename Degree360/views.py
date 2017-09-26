@@ -37,27 +37,32 @@ def questionSectionView(request, pk, email, section):
     formSet = form(request.POST or None, queryset=multiChoiceAnswers, )
     
     if request.method == "POST":
+        validationErrorFound = False
         if formSet.is_valid():
             for form in formSet:
                 if form.is_valid():
                     form.save()
+                else:
+                    validationErrorFound = True
+                    #Todo: add error in the form. Investigate it
                     
-                    sections = QuestionSection.objects.filter(survey = pk).order_by('order')
-                    
+                if(validationErrorFound == False):
                     #redirect to the next question
-                    
-        return HttpResponse("questionSectionView after post. Work in progress.")
-        
-    else:        
-
-        #formSet = form(queryset = multiChoiceAnswers, )
-        context = {
-            'pk': pk,
-            'section': section,
-            'formSet': formSet,
-            }        
-                       
-        return render(request, 'Degree360/questionSection.html', context)
+                    sections = QuestionSection.objects.filter(survey = pk).order_by('order')
+                    currentSection = QuestionSection.objects.get(survey = pk, description = section)
+                    for availableSection in sections:
+                        if availableSection.order > currentSection.order:
+                            return HttpResponseRedirect(reverse('Degree360:questionSectionView', args=(pk, email, availableSection.description,)))
+                    return HttpResponse("Good all section are replied. now save the survey....")
+                            
+    #formSet = form(queryset = multiChoiceAnswers, )
+    context = {
+        'pk': pk,
+        'section': section,
+        'formSet': formSet,
+        }        
+                   
+    return render(request, 'Degree360/questionSection.html', context)
     
 def _processFeedbackProviderFormAndRedirect(form, pk):
     if form.is_valid():
