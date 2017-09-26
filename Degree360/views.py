@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 
 from Degree360.models import FeedbackProvider, Survey, QuestionSection, Question, MultiChoiceAnswer, OpenAnswer
 
-from Degree360.forms import MultiChoiceAnswerForm, FeedbackProviderForm
+from Degree360.forms import MultiChoiceAnswerForm, FeedbackProviderForm, OpenAnswerForm
 
 def workInProgress(request):
     return HttpResponse("Generic view for Degree360. Work in progress.")
@@ -25,8 +25,12 @@ def requestFeedback(request, pk):
     
     return render(request, 'Degree360/requestFeedback.html', context)
 
-def _createFormSet(request, queryset):
+def _createMultiChoiceAnswerFormSet(request, queryset):
     form = modelformset_factory(MultiChoiceAnswer, form=MultiChoiceAnswerForm, extra=0)    
+    return form(request.POST or None, queryset=queryset, )
+
+def _createOpenAnswerFormSet(request, queryset):
+    form = modelformset_factory(OpenAnswer, form=OpenAnswerForm, extra=0)    
     return form(request.POST or None, queryset=queryset, )
 
 def _redirectToNextSectionOrCloseFeedback(survey, email, currentSection):
@@ -37,31 +41,41 @@ def _redirectToNextSectionOrCloseFeedback(survey, email, currentSection):
         if availableSection.order > currentSectionObject.order:
             return HttpResponseRedirect(reverse('Degree360:questionSectionView', args=(survey, email, availableSection.description,)))
     return HttpResponse("Good all section are replied. now save the survey....")
-                    
-def questionSectionView(request, pk, email, section):
 
-    feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
-    multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
-    formSet = _createFormSet(request, multiChoiceAnswers)
-    
-    if request.method == "POST":
-        validationErrorFound = False
-        if formSet.is_valid():
+def _FormSetIsValid(formSet):
+    validationErrorFound = False
+    if formSet.is_valid():
             for form in formSet:
                 if form.is_valid():
                     form.save()
                 else:
                     validationErrorFound = True
                     #Todo: add error in the form. Investigate it
+    else:
+        validationErrorFound = True
+    return validationErrorFound
                     
-            if(validationErrorFound == False):
-                return _redirectToNextSectionOrCloseFeedback(pk, email, section)
-                                                
-    #formSet = form(queryset = multiChoiceAnswers, )
+def questionSectionView(request, pk, email, section):
+
+    feedbackProvider = get_object_or_404(FeedbackProvider, survey=pk, email=email)
+    
+    multiChoiceAnswers = MultiChoiceAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
+    multiChoiceAnswersFormSet = _createMultiChoiceAnswerFormSet(request, multiChoiceAnswers)
+    
+    openAnswers = OpenAnswer.objects.filter(feedback_provider = feedbackProvider, question__section__description = section)
+    openAnswersFormSet = _createOpenAnswerFormSet(request, openAnswers)
+    
+    if request.method == "POST":
+        validMultiChoiceAnswers = _FormSetIsValid(multiChoiceAnswersFormSet)
+        validOpenAnswers = _FormSetIsValid(openAnswersFormSet)                               
+        if( validMultiChoiceAnswers and validOpenAnswers ):
+            return _redirectToNextSectionOrCloseFeedback(pk, email, section)
+            
     context = {
         'pk': pk,
         'section': section,
-        'formSet': formSet,
+        'multiChoiceAnswersFormSet': multiChoiceAnswersFormSet,
+        'openAnswersFormSet': openAnswersFormSet,
         }        
                    
     return render(request, 'Degree360/questionSection.html', context)

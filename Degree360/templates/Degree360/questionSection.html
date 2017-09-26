@@ -1,16 +1,26 @@
 <em><b>{{section}} section</b></em>
 
 <form method="post" class="post-form">{% csrf_token %}
-    {{ formSet.management_form }}
+    {{ multiChoiceAnswersFormSet.management_form }}
     <table>
-        {% for form in formSet %}
+        {% for form in multiChoiceAnswersFormSet %}
         <tr>
         	<td><b>{{ form.instance.question.text }}</b></td>
         	<td>
 	        	{{ form.as_p }}
 			<td>
         </tr>
-        <tr></tr>    
+        {% endfor %}        
+    </table>
+    
+    <table>
+        {% for form in openAnswersFormSet %}
+        <tr>
+        	<b>{{ form.instance.question.text }}</b>
+        </tr>
+        <tr>
+	        	{{ form }}		
+		</tr>    
         {% endfor %}
     </table>
 	<button type="submit" class="save btn btn-default">Next</button>
