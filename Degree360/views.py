@@ -11,6 +11,8 @@ from django.core.urlresolvers import reverse
 
 from Degree360.models import FeedbackProvider, Survey, QuestionSection, Question, MultiChoiceAnswer, OpenAnswer
 
+from Degree360.forms import MultiChoiceAnswerForm
+
 def workInProgress(request):
     return HttpResponse("Generic view for Degree360. Work in progress.")
 
