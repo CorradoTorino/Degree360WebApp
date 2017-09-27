@@ -1,4 +1,4 @@
-Degree360WebApp allow to manage 360-degree feedback process(link wiki). It solicits feedback regarding an employee's behavior from a variety of points of view (subordinate, lateral, and supervisory).
+Degree360WebApp allow to manage 360-degree feedback process. It solicits feedback regarding an employee's behavior from a variety of points of view (subordinate, lateral, and supervisory).
 
 
 The application has the possibility to define group of feedback providers. For example: customers, suppliers.
@@ -19,4 +19,4 @@ Development DB cresentials for django admin
 
 user: Degree360WebApp
 
-pwed: Degree360WebAppPass
+pwd: Degree360WebAppPass
