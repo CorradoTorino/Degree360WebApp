@@ -5,11 +5,17 @@ The application has the possibility to define group of feedback providers. For e
 
 
 Feedback questions are collected in sections covering different work aspects:
+
   •	Leadership
+  
   •	Interpersonal Skills
+  
   •	Problem Solving
+  
   •	Motivation
-  •	Efficiency.
+  
+  •	Efficiency
+  
 
 These sections are customizable.
 
