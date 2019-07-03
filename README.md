@@ -20,9 +20,3 @@ Feedback questions are collected in sections covering different work aspects:
 These sections are customizable.
 
 Questions can be replied with multi-choice answers or with open answers.
-
-Development DB cresentials for django admin
-
-user: Degree360WebApp
-
-pwd: Degree360WebAppPass
